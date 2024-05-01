@@ -14,8 +14,14 @@ export const SocketContextProvider = ({ children }) => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const user = useRecoilValue(userAtom);
 
+  let baseUrl = "http://localhost:5001";
+
+  if (window.location.hostname !== "localhost") {
+    baseUrl = "https://mern-simple-thread-clone.onrender.com";
+  }
+
   useEffect(() => {
-    const socket = io("http://localhost:5001", {
+    const socket = io(baseUrl, {
       query: {
         userId: user?._id,
       },
