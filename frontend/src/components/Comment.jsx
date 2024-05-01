@@ -1,4 +1,5 @@
 import { Avatar, Divider, Flex, Text } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 const Comment = ({ reply, lastReply }) => {
   return (
@@ -12,7 +13,7 @@ const Comment = ({ reply, lastReply }) => {
             alignItems={"center"}
           >
             <Text fontSize={"sm"} fontWeight={"bold"}>
-              {reply.username}
+              <Link to={`/${reply.username}`}>{reply.username}</Link>
             </Text>
           </Flex>
           <Text>{reply.text}</Text>

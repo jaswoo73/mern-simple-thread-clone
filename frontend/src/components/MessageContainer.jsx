@@ -55,6 +55,7 @@ const MessageContainer = () => {
           }
           return conversation;
         });
+        console.log("setLastMessage");
         return updatedConversations;
       });
     });

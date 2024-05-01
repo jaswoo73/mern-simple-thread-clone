@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import Comment from "../components/Comment";
 import useGetUserProfile from "../hooks/useGetUserProfile";
 import useShowToast from "../hooks/useShowToast";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { formatDistanceToNowStrict } from "date-fns";
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
@@ -92,7 +92,7 @@ const PostPage = () => {
           <Avatar src={user.profilePic} size={"md"} name={user.name} />
           <Flex alignItems={"center"}>
             <Text fontSize={"sm"} fontWeight={"bold"}>
-              {user.username}
+              <Link to={`/${user.username}`}>{user.username}</Link>
             </Text>
             <Image src="/verified.png" w={4} h={4} ml={4} />
           </Flex>

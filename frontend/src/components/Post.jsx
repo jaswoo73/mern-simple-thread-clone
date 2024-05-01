@@ -66,10 +66,31 @@ const Post = ({ post, postedBy }) => {
 
   if (!user) return null;
 
-  const uniqueRepliedUser = new Set(post.replies.map((r) => r.postedBy));
+  const uniqueRepliesUsers = [];
+
+  post.replies.forEach((reply) => {
+    // Check if there is already a user with the same username and userProfilePic
+    const existingUserIndex = uniqueRepliesUsers.findIndex(
+      (user) =>
+        user.username === reply.username ||
+        user.profilePic === reply.userProfilePic
+    );
+
+    if (existingUserIndex === -1) {
+      // If the user is not found, add it to the uniqueRepliesUsers array
+      uniqueRepliesUsers.push({
+        userId: reply.userId,
+        username: reply.userProfilePic === "" ? "" : reply.username,
+        profilePic: reply.userProfilePic,
+      });
+    }
+  });
+
+  console.log(uniqueRepliesUsers);
+
   return (
     <Link to={`/${user.username}/post/${post._id}`}>
-      <Flex gap={3} mb={4} py={5} px={3}>
+      <Flex gap={3} mb={4} py={5} px={3} _hover={{ bg: "gray.900" }}>
         <Flex flexDirection={"column"} alignItems={"center"}>
           <Avatar
             size={"md"}
@@ -89,33 +110,33 @@ const Post = ({ post, postedBy }) => {
           ></Box>
           <Box position={"relative"} w={"full"} mt={5}>
             {post.replies.length === 0 && <Text textAlign={"center"}>🥱</Text>}
-            {[...uniqueRepliedUser][0] && (
+            {uniqueRepliesUsers[0] && (
               <Avatar
                 size="xs"
-                name="john doe"
-                src={[uniqueRepliedUser][0].userProfilePic}
+                name={uniqueRepliesUsers[0].username}
+                src={uniqueRepliesUsers[0].profilePic}
                 position={"absolute"}
-                top="0px"
+                top={uniqueRepliesUsers.length <= 1 ? "10px" : "0px"}
                 left="15px"
                 padding="2px"
               />
             )}
-            {post.replies[1] && (
+            {uniqueRepliesUsers[1] && (
               <Avatar
                 size="xs"
-                name="john doe"
-                src={post.replies[1].userProfilePic}
+                name={uniqueRepliesUsers[1].username}
+                src={uniqueRepliesUsers[1].profilePic}
                 position={"absolute"}
                 bottom={"0px"}
                 right="-5px"
                 padding={"2px"}
               />
             )}
-            {post.replies[2] && (
+            {uniqueRepliesUsers[2] && (
               <Avatar
                 size="xs"
-                name="john doe"
-                src={post.replies[2].userProfilePic}
+                name={uniqueRepliesUsers[2].username}
+                src={uniqueRepliesUsers[2].profilePic}
                 position={"absolute"}
                 bottom={"0px"}
                 left="4px"

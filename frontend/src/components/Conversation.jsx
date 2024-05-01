@@ -24,6 +24,7 @@ const Conversation = ({ conversation, isOnline }) => {
   );
   // to avoid the "React Hooks must be called in the exact same order in every component render" warning
   const { colorMode } = useColorMode();
+
   return (
     <Flex
       gap={4}
@@ -54,12 +55,12 @@ const Conversation = ({ conversation, isOnline }) => {
     >
       <WrapItem>
         <Avatar
+          src={user.profilePic}
           size={{
             base: "xs",
             sm: "sm",
             md: "md",
           }}
-          src={user.profilePic}
         >
           {isOnline ? (
             <AvatarBadge boxSize="1em" bg="green.500" />
@@ -83,12 +84,15 @@ const Conversation = ({ conversation, isOnline }) => {
           )}
           {lastMessage.text.length > 16
             ? lastMessage.text.substring(0, 16) + "..."
-            : lastMessage.text || (
+            : lastMessage.text ||
+              (conversation.mock ? (
+                ""
+              ) : (
                 <>
                   <BsImageFill size={16} style={{ marginLeft: "2px" }} />
                   <Text>Image</Text>
                 </>
-              )}
+              ))}
         </Box>
       </Stack>
     </Flex>
