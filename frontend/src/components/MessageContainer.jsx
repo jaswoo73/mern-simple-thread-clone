@@ -37,7 +37,7 @@ const MessageContainer = () => {
         setMessages((prevMessages) => [...prevMessages, message]);
       }
 
-      if (!document.hasFocus()) {
+      if (window.onblur) {
         const sound = new Audio(messageSound);
         sound.play();
       }

@@ -55,9 +55,10 @@ const UserPage = () => {
           <Spinner size={"xl"} />
         </Flex>
       )}
-      {posts.map((post) => (
-        <Post key={post._id} post={post} postedBy={post.postedBy} />
-      ))}
+      {!fetchingPosts &&
+        posts.map((post) => (
+          <Post key={post._id} post={post} postedBy={post.postedBy} />
+        ))}
     </>
   );
 };
