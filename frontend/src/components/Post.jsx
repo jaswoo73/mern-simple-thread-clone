@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Image, Text, useColorMode } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import Actions from "./Actions";
 import { useEffect, useState } from "react";
@@ -15,6 +15,7 @@ const Post = ({ post, postedBy }) => {
   const currentUser = useRecoilValue(userAtom);
   const showToast = useShowToast();
   const navigate = useNavigate();
+  const { colorMode } = useColorMode();
 
   useEffect(() => {
     const getUser = async () => {
@@ -86,11 +87,16 @@ const Post = ({ post, postedBy }) => {
     }
   });
 
-  console.log(uniqueRepliesUsers);
-
   return (
     <Link to={`/${user.username}/post/${post._id}`}>
-      <Flex gap={3} mb={4} py={5} px={3} _hover={{ bg: "gray.900" }}>
+      <Flex
+        gap={3}
+        mb={4}
+        py={5}
+        px={3}
+        borderRadius={"md"}
+        _hover={{ bg: colorMode === "light" ? "gray.300" : "gray.600" }}
+      >
         <Flex flexDirection={"column"} alignItems={"center"}>
           <Avatar
             size={"md"}
@@ -116,7 +122,7 @@ const Post = ({ post, postedBy }) => {
                 name={uniqueRepliesUsers[0].username}
                 src={uniqueRepliesUsers[0].profilePic}
                 position={"absolute"}
-                top={uniqueRepliesUsers.length <= 1 ? "10px" : "0px"}
+                top="-5px"
                 left="15px"
                 padding="2px"
               />

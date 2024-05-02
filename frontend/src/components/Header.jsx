@@ -1,15 +1,17 @@
 import { Button, Flex, Image, Link, useColorMode } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
-import { AiFillHome } from "react-icons/ai";
+import { HiOutlineHome } from "react-icons/hi";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { FiLogOut } from "react-icons/fi";
 import useLogout from "../hooks/useLogout";
 import authScreenAtom from "../atoms/authAtom";
-import { BsFillChatQuoteFill } from "react-icons/bs";
+import { BsChatQuote } from "react-icons/bs";
 import { MdOutlineSettings } from "react-icons/md";
+import SearchUser from "./SearchUser";
+import CreatePost from "./CreatePost";
 
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -22,9 +24,12 @@ const Header = () => {
   return (
     <Flex justifyContent="space-between" mt={6} mb={12}>
       {user && (
-        <Link as={RouterLink} to="/">
-          <AiFillHome size={24} />
-        </Link>
+        <>
+          <Link as={RouterLink} to="/">
+            <HiOutlineHome size={24} />
+          </Link>
+          <SearchUser />
+        </>
       )}
       {!user && (
         <Link as={RouterLink} to="/auth" onClick={() => setAuthScreen("login")}>
@@ -38,6 +43,8 @@ const Header = () => {
         src={colorMode === "dark" ? "/light-logo.svg" : "/dark-logo.svg"}
         onClick={toggleColorMode}
       />
+
+      {user && <CreatePost />}
       {user && (
         <Flex alignItems={"center"} gap={4}>
           {pathname.includes("post") && (
@@ -49,7 +56,7 @@ const Header = () => {
             <RxAvatar size={24} />
           </Link>
           <Link as={RouterLink} to={`/chat`}>
-            <BsFillChatQuoteFill size={20} />
+            <BsChatQuote size={20} />
           </Link>
           <Link as={RouterLink} to={`/settings`}>
             <MdOutlineSettings size={20} />

@@ -24,8 +24,8 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
 import postsAtom from "../atoms/postsAtom";
-import { useLocation, useParams } from "react-router-dom";
-import { IoCreateOutline } from "react-icons/io5";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { PiNotePencilBold } from "react-icons/pi";
 
 const MAX_CHAR = 500;
 const CreatePost = () => {
@@ -94,17 +94,14 @@ const CreatePost = () => {
 
   return (
     <>
-      <Button
-        position={"fixed"}
-        bottom={10}
-        right={10}
+      <Link
         bg={useColorModeValue("gray.300", "gray.dark")}
         onClick={onOpen}
         size={{ base: "sm", md: "md" }}
         _hover={{ bg: useColorModeValue("gray.400", "gray.600") }}
       >
-        <IoCreateOutline size={26} />
-      </Button>
+        <PiNotePencilBold size={24} />
+      </Link>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

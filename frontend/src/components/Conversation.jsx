@@ -14,6 +14,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { BsCheck2All, BsImageFill } from "react-icons/bs";
 import { selectedConversationAtom } from "../atoms/messagesAtom";
+import { useEffect, useState } from "react";
 
 const Conversation = ({ conversation, isOnline }) => {
   const user = conversation.participants[0];
@@ -24,6 +25,23 @@ const Conversation = ({ conversation, isOnline }) => {
   );
   // to avoid the "React Hooks must be called in the exact same order in every component render" warning
   const { colorMode } = useColorMode();
+  const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+
+  useEffect(() => {
+    if (
+      lastMessage &&
+      currentUser._id !== lastMessage.sender &&
+      !lastMessage.seen
+    ) {
+      setHasUnreadMessages(true);
+    } else {
+      setHasUnreadMessages(false);
+    }
+  }, [lastMessage, selectedConversation, currentUser._id]);
+
+  useEffect(() => {
+    setHasUnreadMessages(false);
+  }, [selectedConversation]);
 
   return (
     <Flex
@@ -36,15 +54,16 @@ const Conversation = ({ conversation, isOnline }) => {
         color: "white",
       }}
       borderRadius={"md"}
-      onClick={() =>
+      onClick={() => {
         setSelectedConversation({
           _id: conversation._id,
           userId: user._id,
           username: user.username,
           userProfilePic: user.profilePic,
           mock: conversation.mock,
-        })
-      }
+        });
+        setHasUnreadMessages(false);
+      }}
       bg={
         selectedConversation._id === conversation._id
           ? colorMode === "light"
@@ -93,6 +112,15 @@ const Conversation = ({ conversation, isOnline }) => {
                   <Text>Image</Text>
                 </>
               ))}
+          {hasUnreadMessages && currentUser._id !== lastMessage.sender && (
+            <Text
+              size={"xs"}
+              color="blue.500"
+              display={hasUnreadMessages ? "inline" : "none"}
+            >
+              New
+            </Text>
+          )}
         </Box>
       </Stack>
     </Flex>

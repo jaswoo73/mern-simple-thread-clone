@@ -20,6 +20,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { useSocket } from "../context/SocketContext";
 import messageSound from "../assets/sounds/message.mp3";
+import { Link } from "react-router-dom";
 
 const MessageContainer = () => {
   const showToast = useShowToast();
@@ -30,21 +31,19 @@ const MessageContainer = () => {
   const { socket } = useSocket();
   const setConversations = useSetRecoilState(conversationsAtom);
   const messageEndRef = useRef(null);
+  const messageSoundRef = useRef(new Audio(messageSound));
 
   useEffect(() => {
     socket.on("newMessage", (message) => {
-      if (selectedConversation._id === message.conversationId) {
-        setMessages((prevMessages) => [...prevMessages, message]);
-      }
+      setMessages((prev) => [...prev, message]);
 
-      if (window.onblur) {
-        const sound = new Audio(messageSound);
-        sound.play();
+      if (!document.hasFocus()) {
+        messageSoundRef.current.play();
       }
 
       setConversations((prev) => {
         const updatedConversations = prev.map((conversation) => {
-          if (conversation._id === message?.conversationId) {
+          if (conversation._id === message.conversationId) {
             return {
               ...conversation,
               lastMessage: {
@@ -55,7 +54,6 @@ const MessageContainer = () => {
           }
           return conversation;
         });
-        console.log("setLastMessage");
         return updatedConversations;
       });
     });
@@ -115,7 +113,12 @@ const MessageContainer = () => {
       }
     };
     getMessages();
-  }, [showToast, selectedConversation.userId, selectedConversation.mock]);
+  }, [
+    showToast,
+    selectedConversation.userId,
+    selectedConversation.mock,
+    setMessages,
+  ]);
 
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -133,8 +136,10 @@ const MessageContainer = () => {
       <Flex w={"full"} h={12} alignItems={"center"}>
         <Avatar src={selectedConversation.userProfilePic} size={"sm"} />
         <Text display={"flex"} alignItems={"center"} ml={2}>
-          {selectedConversation.username}
-        </Text>{" "}
+          <Link to={`/${selectedConversation.username}`} target="_blank">
+            {selectedConversation.username}
+          </Link>
+        </Text>
         <Image src="/verified.png" w={4} h={4} ml={1} />
       </Flex>
 

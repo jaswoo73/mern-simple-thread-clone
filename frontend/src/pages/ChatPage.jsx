@@ -11,6 +11,7 @@ import {
 import { SearchIcon } from "@chakra-ui/icons";
 import Conversation from "../components/Conversation";
 import { GiConversation } from "react-icons/gi";
+import { IoMdRefresh } from "react-icons/io";
 import MessageContainer from "../components/MessageContainer";
 import { useEffect, useState } from "react";
 import useShowToast from "../hooks/useShowToast";
@@ -33,6 +34,7 @@ const ChatPage = () => {
   const currentUser = useRecoilValue(userAtom);
   const showToast = useShowToast();
   const { socket, onlineUsers } = useSocket();
+  const [userRefresh, setUserRefresh] = useState(false);
 
   useEffect(() => {
     socket?.on("messagesSeen", ({ conversationId }) => {
@@ -51,7 +53,6 @@ const ChatPage = () => {
         });
         return updatedConversations;
       });
-      console.log("messagesSeen", conversationId);
     });
   }, [socket, setConversations]);
 
@@ -64,7 +65,6 @@ const ChatPage = () => {
           showToast("Error", data.error, "error");
           return;
         }
-        console.log(data);
         setConversations(data);
       } catch (error) {
         showToast("Error", error.message, "error");
@@ -73,7 +73,7 @@ const ChatPage = () => {
       }
     };
     getConversations();
-  }, [showToast, setConversations]);
+  }, [showToast, setConversations, userRefresh]);
 
   const handleConversationSearch = async (e) => {
     e.preventDefault();
@@ -156,12 +156,17 @@ const ChatPage = () => {
             md: "full",
           }}
         >
-          <Text
-            fontWeight={700}
-            color={useColorModeValue("gray.600", "gray.400")}
-          >
-            Your Conversations
-          </Text>
+          <Flex alignItems={"center"} gap={2}>
+            <Text
+              fontWeight={700}
+              color={useColorModeValue("gray.600", "gray.400")}
+            >
+              Your Conversations
+            </Text>
+            <button onClick={() => setUserRefresh((prev) => !prev)}>
+              <IoMdRefresh size={20} />
+            </button>
+          </Flex>
           <form onSubmit={handleConversationSearch}>
             <Flex alignItems={"center"} gap={2}>
               <Input
