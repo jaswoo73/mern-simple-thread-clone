@@ -11,6 +11,7 @@ import {
   Portal,
   Text,
   VStack,
+  useColorMode,
   useToast,
 } from "@chakra-ui/react";
 import { BsInstagram } from "react-icons/bs";
@@ -24,6 +25,7 @@ const UserHeader = ({ user }) => {
   const toast = useToast();
   const currentUser = useRecoilValue(userAtom); // logged in user
   const { handleFollowUnfollow, updating, following } = useFollowUnfollow(user);
+  const { colorMode } = useColorMode();
   const copyURL = () => {
     const currentURL = window.location.href;
     navigator.clipboard.writeText(currentURL).then(() => {
@@ -96,7 +98,12 @@ const UserHeader = ({ user }) => {
         </RouterLink>
       )}
       {currentUser?._id !== user?._id && (
-        <Button size={"sm"} onClick={handleFollowUnfollow} isLoading={updating}>
+        <Button
+          size={"sm"}
+          onClick={handleFollowUnfollow}
+          isLoading={updating}
+          bg={colorMode === "dark" ? "gray.800" : "gray.400"}
+        >
           {following ? "Unfollow" : "Follow"}
         </Button>
       )}

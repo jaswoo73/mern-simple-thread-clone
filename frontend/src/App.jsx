@@ -10,6 +10,7 @@ import userAtom from "./atoms/userAtom";
 import UpdateProfilePage from "./pages/UpdateProfilePage";
 import ChatPage from "./pages/ChatPage";
 import SettingsPage from "./pages/SettingsPage";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
   const user = useRecoilValue(userAtom);
@@ -33,7 +34,11 @@ function App() {
             path="/update"
             element={user ? <UpdateProfilePage /> : <Navigate to={"/auth"} />}
           />
-          <Route path="/:username" element={<UserPage />} />
+          <Route
+            path="/:username"
+            element={<UserPage />}
+            errorElement={<ErrorPage />}
+          />
           <Route path="/:username/post/:pid" element={<PostPage />} />
           <Route
             path="/chat"
@@ -43,6 +48,7 @@ function App() {
             path="/settings"
             element={user ? <SettingsPage /> : <Navigate to={"/auth"} />}
           />
+          <Route path="*" element={<ErrorPage text="page" />} />
         </Routes>
       </Container>
     </Box>
